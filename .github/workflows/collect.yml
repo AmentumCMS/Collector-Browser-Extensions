@@ -330,4 +330,4 @@ jobs:
           tag_name: ${{ needs.Date.outputs.Date }}
           make_latest: true
           files: |
-            *.txt
+            *
