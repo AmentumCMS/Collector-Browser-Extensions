@@ -1,5 +1,5 @@
 name: Browser-Extension-Collection (Branch)
-run-name: ${{ github.actor }} is Collecting Images 🚀
+run-name: ${{ github.actor }} is Collecting Extensions (Branch) 🚀
 on:
   push:
     branches-ignore:

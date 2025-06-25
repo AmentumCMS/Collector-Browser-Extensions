@@ -1,5 +1,5 @@
 name: Browser-Extension-Collection
-run-name: ${{ github.actor }} is Collecting Images 🚀
+run-name: ${{ github.actor }} is Collecting Extensions 🚀
 on:
   push:
     branches:
@@ -158,6 +158,7 @@ jobs:
           graph_endpoint: "graph.microsoft.us"
 
   DownloadCRX:
+    needs: [Date]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -175,7 +176,7 @@ jobs:
         run: python download_extensions.py
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: browser-extensions
           path: extensions/
