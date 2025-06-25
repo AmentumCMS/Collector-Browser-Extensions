@@ -302,9 +302,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
-          pattern: "*.txt"
+          path: ${{ vars.COLLECTOR }}
 
       - name: Show Artifacts
-        run: ls -A1h *.txt
+        run: ls -A1h ${{ vars.COLLECTOR }}
 
       # Create Release
