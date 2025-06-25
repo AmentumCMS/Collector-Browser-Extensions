@@ -184,8 +184,8 @@ jobs:
 
       - name: Generate TARchive Hash
         run: |
-          sha256sum -b ${{ vars.COLLECTOR }}-code-${{ needs.Date.outputs.Date }}.tgz | tee \
-            ${{ vars.COLLECTOR }}-code-${{ needs.Date.outputs.Date }}.tgz.sha
+          sha256sum -b ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz | tee \
+            ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz.sha
 
       - name: Directory Listing
         run: echo -e "\nDirectory Listing for $PWD\n$(ls -1Ssh)"
@@ -193,8 +193,8 @@ jobs:
       - name: Upload Tarchive, ToC, and hash
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ vars.COLLECTOR }}-code-${{ needs.Date.outputs.Date }}.tgz
-          path: ${{ vars.COLLECTOR }}-code-${{ needs.Date.outputs.Date }}.tgz*
+          name: ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz
+          path: ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz*
           if-no-files-found: error
 
       - name: Upload artifacts
