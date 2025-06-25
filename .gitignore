@@ -1,0 +1,21 @@
+# Ignore .vagrant
+.vagrant*
+
+# Ignore subdirectories
+!.github/**
+dist/
+node_modules/
+node_modules.tar
+coverage/
+docs/
+.yarn/cache
+extensions/
+
+# Ignore Files
+*.tgz
+*.gz
+*.zip
+*.bundle
+*.log
+*.vdi
+desktop.ini
