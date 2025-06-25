@@ -1,0 +1,9 @@
+[submodule "redux-devtools-extension"]
+	path = redux-devtools-extension
+	url = https://github.com/zalmoxisus/redux-devtools-extension.git
+[submodule "react-devtools"]
+	path = react-devtools
+	url = https://github.com/facebook/react-devtools
+[submodule "darkreader"]
+	path = darkreader
+	url = https://github.com/darkreader/darkreader
