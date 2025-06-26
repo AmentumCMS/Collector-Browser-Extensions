@@ -1,5 +1,7 @@
 # What is this?
 
+[![Release](https://github.com/amentumcms/Collector-Browser-Extensions/actions/workflows/collect.yml/badge.svg?branch=main)](https://github.com/amentumcms/Collector-Browser-Extensions/actions/workflows/collect.yml)
+
 This is a project that automatically collects and creates artifacts to ease in air-gapped transfer of useful browser extensions from the internet.
 
 It runs actions as needed/manually, on GIT Commit Push, or automatically on Mondays at 00:00 
