@@ -230,7 +230,7 @@ jobs:
       - name: Run Collection Script for extensions_github.txt
         run: |
             cd ${{ vars.COLLECTOR }}
-            ./collect.sh extensions_github.txt
+            ../collect.sh ../extensions_github.txt
 
       # Binaries Downloaded
 
