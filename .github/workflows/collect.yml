@@ -157,55 +157,55 @@ jobs:
           login_endpoint: "login.microsoftonline.us"
           graph_endpoint: "graph.microsoft.us"
 
-  DownloadCRX:
-    needs: [Date]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  # DownloadCRX:
+  #   needs: [Date]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.x'
 
-      - name: Install dependencies
-        run: pip install requests
+  #     - name: Install dependencies
+  #       run: pip install requests
 
-      - name: Run download script
-        run: python download_extensions.py
+  #     - name: Run download script
+  #       run: python download_extensions.py
 
-      - name: TARchive CRX files for ${{ vars.COLLECTOR }}
-        run: |
-          tar -cv \
-            -f ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz \
-            -C extensions \
-            | tee ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz.txt
+  #     - name: TARchive CRX files for ${{ vars.COLLECTOR }}
+  #       run: |
+  #         tar -cv \
+  #           -f ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz \
+  #           -C extensions \
+  #           | tee ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz.txt
 
-      - name: Generate TARchive Hash
-        run: |
-          sha256sum -b ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz | tee \
-            ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz.sha
+  #     - name: Generate TARchive Hash
+  #       run: |
+  #         sha256sum -b ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz | tee \
+  #           ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz.sha
 
-      - name: Directory Listing
-        run: echo -e "\nDirectory Listing for $PWD\n$(ls -1Ssh)"
+  #     - name: Directory Listing
+  #       run: echo -e "\nDirectory Listing for $PWD\n$(ls -1Ssh)"
 
-      - name: Upload Tarchive, ToC, and hash
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz
-          path: ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz*
-          if-no-files-found: error
+      # - name: Upload Tarchive, ToC, and hash
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz
+      #     path: ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz*
+      #     if-no-files-found: error
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: browser-extensions
-          path: extensions/
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: browser-extensions
+      #     path: extensions/
 
   MakeISO:
     runs-on: ubuntu-24.04
-    needs: [Date, Code, Collect-Github, DownloadCRX]
+    needs: [Date, Code, Collect-Github]
     env:
       GH_TOKEN: ${{ github.token }}
     permissions:
