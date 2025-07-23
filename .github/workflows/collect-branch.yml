@@ -226,7 +226,7 @@ jobs:
         run: cp -v README.md ${{ vars.COLLECTOR }}/
 
       - name: Show Artifacts
-        run: du -chd2 ${{ vars.COLLECTOR }}
+        run: du -hd4 ${{ vars.COLLECTOR }}
 
       # - name: Generate Artifact Hash File
       #   run: |
@@ -299,14 +299,9 @@ jobs:
           path: ${{ vars.COLLECTOR }}
 
       - name: Show Artifacts
-        run: ls -A1h ${{ vars.COLLECTOR }}
+        run: ls -1sh ${{ vars.COLLECTOR }}
 
       # Create Release
-      - name: Set up git
-        run: |
-          git config user.name "$(git log -n 1 --pretty=format:%an)"
-          git config user.email "$(git log -n 1 --pretty=format:%ae)"
-
 
   Sharepoint:
     runs-on: ubuntu-24.04

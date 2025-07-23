@@ -226,7 +226,7 @@ jobs:
         run: cp -v README.md ${{ vars.COLLECTOR }}/
 
       - name: Show Artifacts
-        run: du -chd2 ${{ vars.COLLECTOR }}
+        run: du -hd4 ${{ vars.COLLECTOR }}
 
       # - name: Generate Artifact Hash File
       #   run: |
@@ -299,7 +299,7 @@ jobs:
           path: ${{ vars.COLLECTOR }}
 
       - name: Show Artifacts
-        run: ls -A1h ${{ vars.COLLECTOR }}
+        run: ls -1sh ${{ vars.COLLECTOR }}
 
       # Create Release
       - name: Set up git
