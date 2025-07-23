@@ -110,7 +110,8 @@ jobs:
       - name: ISO Table of contents
         run: |
           tree -a extensions_github \
-            | tee extensions_github/extensions_github-${{ needs.Date.outputs.Date }}.iso.txt
+            | tee extensions_github-${{ needs.Date.outputs.Date }}.iso.txt
+          cp -v extensions_github-${{ needs.Date.outputs.Date }}.iso.txt extensions_github/
 
       - name: Directory Contents and Disc usage
         run: |
