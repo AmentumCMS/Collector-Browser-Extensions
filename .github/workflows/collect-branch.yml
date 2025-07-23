@@ -271,7 +271,7 @@ jobs:
           | tee ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso.sha
 
       - name: Show ISO & Hash
-        run: du -chs *.iso*
+        run: ls -1Ssh *.iso*
 
       - name: Upload ISO, ToC, and hash
         uses: actions/upload-artifact@v4
@@ -316,6 +316,6 @@ jobs:
           merge-multiple: true
 
       - name: Show Artifacts
-        run: du -chs ${{ vars.COLLECTOR }}-*.*
+        run: ls -1Ssh ${{ vars.COLLECTOR }}-*.*
 
       # Upload files to Sharepoint
