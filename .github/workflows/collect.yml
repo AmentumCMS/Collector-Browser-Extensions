@@ -112,13 +112,6 @@ jobs:
           tree -a extensions_github \
             | tee extensions_github/extensions_github-${{ needs.Date.outputs.Date }}.iso.txt
 
-      - name: Upload iso ToC artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: extensions_github-${{ needs.Date.outputs.Date }}.iso.txt
-          path: extensions_github/extensions_github-${{ needs.Date.outputs.Date }}.iso.txt
-          if-no-files-found: error
-
       - name: Directory Contents and Disc usage
         run: |
           echo -e "\nListing:\n$(ls -A1h extensions_github/*)"
@@ -144,18 +137,12 @@ jobs:
       - name: Show ISO & Hash
         run: ls -Alht *.iso*
 
-      - name: Send extensions_github ISO to Sharepoint
-        uses: amentumcms/sharepoint-file-upload-action@main
+      - name: Upload iso artifacts
+        uses: actions/upload-artifact@v4
         with:
-          file_path: "*.iso*"
-          host_name: "${{ secrets.SHAREPOINT_HOST }}"
-          site_name: "${{ secrets.SHAREPOINT_SITE }}"
-          upload_path: "${{ secrets.SHAREPOINT_BASEPATH }}/${{ vars.COLLECTOR }}/${{ needs.Date.outputs.Date }}"
-          tenant_id: ${{ secrets.SHAREPOINT_TENANT_ID }}
-          client_id: ${{ secrets.SHAREPOINT_APP_ID }}
-          client_secret: ${{ secrets.SHAREPOINT_APP_SECRET }}
-          login_endpoint: "login.microsoftonline.us"
-          graph_endpoint: "graph.microsoft.us"
+          name: extensions_github-${{ needs.Date.outputs.Date }}.iso
+          path: *.iso*
+          if-no-files-found: error
 
   # DownloadCRX:
   #   needs: [Date]
@@ -205,7 +192,7 @@ jobs:
 
   MakeISO:
     runs-on: ubuntu-24.04
-    needs: [Date, Code]
+    needs: [Date, Code, Collect-Github]
     env:
       GH_TOKEN: ${{ github.token }}
     permissions:
@@ -336,3 +323,33 @@ jobs:
           make_latest: true
           files: |
             ${{ vars.COLLECTOR }}/*
+
+  Sharepoint:
+    runs-on: ubuntu-24.04
+    needs: [Date, MakeISO]
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Show Artifacts
+        run: ls -Alht ${{ vars.COLLECTOR }}-*.*
+
+      # Upload files to Sharepoint
+      - name: Send Files to Sharepoint
+        uses: amentumcms/sharepoint-file-upload-action@main
+        with:
+          file_path: "${{ vars.COLLECTOR }}-*.*"
+          host_name: ${{ secrets.SHAREPOINT_HOST }}
+          site_name: ${{ secrets.SHAREPOINT_SITE }}
+          upload_path: '${{ secrets.SHAREPOINT_BASEPATH }}/${{ vars.COLLECTOR }}/${{ needs.Date.outputs.Date }}'
+          tenant_id: ${{ secrets.SHAREPOINT_TENANT_ID }}
+          client_id: ${{ secrets.SHAREPOINT_APP_ID }}
+          client_secret: ${{ secrets.SHAREPOINT_APP_SECRET }}
+          login_endpoint: 'login.microsoftonline.us'
+          graph_endpoint: 'graph.microsoft.us'
+
