@@ -229,8 +229,8 @@ jobs:
       # Download Binaries if needed
       - name: Run Collection Script for extensions_github.txt
         run: |
-            cd ${{ vars.COLLECTOR }}
-            ../collect.sh ../extensions_github.txt
+            ./collect.sh extensions_github.txt
+            mv extensions_github ${{ vars.COLLECTOR }}
 
       # Binaries Downloaded
 
