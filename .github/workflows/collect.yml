@@ -244,7 +244,8 @@ jobs:
       - name: ISO Table of contents
         run: |
           tree ${{ vars.COLLECTOR }} \
-            | tee ${{ vars.COLLECTOR }}/${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso.txt
+            | tee ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso.txt
+          cp -v ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso.txt ${{ vars.COLLECTOR }}/
 
       - name: Upload ISO ToC artifact
         uses: actions/upload-artifact@v4
