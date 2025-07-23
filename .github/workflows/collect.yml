@@ -205,7 +205,7 @@ jobs:
 
   MakeISO:
     runs-on: ubuntu-24.04
-    needs: [Date, Code, Collect-Github]
+    needs: [Date, Code]
     env:
       GH_TOKEN: ${{ github.token }}
     permissions:
@@ -229,7 +229,7 @@ jobs:
       # Download Binaries if needed
       - name: Run Collection Script for extensions_github.txt
         run: |
-            cd ISO
+            cd ${{ vars.COLLECTOR }}
             ./collect.sh extensions_github.txt
 
       # Binaries Downloaded
