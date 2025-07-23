@@ -7,3 +7,6 @@
 [submodule "darkreader"]
 	path = darkreader
 	url = https://github.com/darkreader/darkreader
+[submodule "redux-devtools"]
+	path = redux-devtools
+	url = https://github.com/reduxjs/redux-devtools.git
