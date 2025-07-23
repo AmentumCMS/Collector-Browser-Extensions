@@ -227,6 +227,11 @@ jobs:
           path: ${{ vars.COLLECTOR }}
 
       # Download Binaries if needed
+      - name: Run Collection Script for extensions_github.txt
+        run: |
+            cd ISO
+            ./collect.sh extensions_github.txt
+
       # Binaries Downloaded
 
       - name: Copy README to ${{ vars.COLLECTOR }} ISO
