@@ -136,7 +136,7 @@ jobs:
             extensions_github-${{ needs.Date.outputs.Date }}.iso.sha
 
       - name: Show ISO & Hash
-        run: ls -Alht *.iso*
+        run: du -chs *.iso*
 
       - name: Upload iso artifacts
         uses: actions/upload-artifact@v4
@@ -226,7 +226,7 @@ jobs:
         run: cp -v README.md ${{ vars.COLLECTOR }}/
 
       - name: Show Artifacts
-        run: ls -Alht ${{ vars.COLLECTOR }}
+        run: du -chs ${{ vars.COLLECTOR }}
 
       - name: Generate Artifact Hash File
         run: |
@@ -270,7 +270,7 @@ jobs:
           | tee ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso.sha
 
       - name: Show ISO & Hash
-        run: ls -Alht *.iso*
+        run: du -chs *.iso*
 
       - name: Upload ISO, ToC, and hash
         uses: actions/upload-artifact@v4
