@@ -116,7 +116,7 @@ jobs:
       - name: Directory Contents and Disc usage
         run: |
           echo -e "\nListing:\n$(ls -A1h extensions_github/*)"
-          echo -e "\nDisk Usage:\n$(du -hd1 extensions_github/*)"
+          echo -e "\nDisk Usage:\n$(du -chd3 extensions_github/*)"
 
       - name: Make extensions_github ISO
         run: |
@@ -136,7 +136,7 @@ jobs:
             extensions_github-${{ needs.Date.outputs.Date }}.iso.sha
 
       - name: Show ISO & Hash
-        run: du -chs *.iso*
+        run: ls -1Ssh *.iso*
 
       - name: Upload iso artifacts
         uses: actions/upload-artifact@v4
@@ -226,7 +226,7 @@ jobs:
         run: cp -v README.md ${{ vars.COLLECTOR }}/
 
       - name: Show Artifacts
-        run: du -hd4 ${{ vars.COLLECTOR }}
+        run: du -hd5 ${{ vars.COLLECTOR }}
 
       # - name: Generate Artifact Hash File
       #   run: |
@@ -316,6 +316,6 @@ jobs:
           merge-multiple: true
 
       - name: Show Artifacts
-        run: ls -Alht ${{ vars.COLLECTOR }}-*.*
+        run: du -chs ${{ vars.COLLECTOR }}-*.*
 
       # Upload files to Sharepoint
