@@ -50,7 +50,7 @@ jobs:
             ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.bundle.sha
 
       - name: Upload bundle and hash
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.bundle
           path: ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.bundle*
@@ -71,7 +71,7 @@ jobs:
         run: echo -e "\nDirectory Listing for $PWD\n$(ls -1Ssh)"
 
       - name: Upload Tarchive, ToC, and hash
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ vars.COLLECTOR }}-code-${{ needs.Date.outputs.Date }}.tgz
           path: ${{ vars.COLLECTOR }}-code-${{ needs.Date.outputs.Date }}.tgz*
@@ -139,7 +139,7 @@ jobs:
         run: ls -1Ssh *.iso*
 
       - name: Upload iso artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: extensions_github-${{ needs.Date.outputs.Date }}.iso
           path: "*.iso*"
@@ -179,14 +179,14 @@ jobs:
   #       run: echo -e "\nDirectory Listing for $PWD\n$(ls -1Ssh)"
 
       # - name: Upload Tarchive, ToC, and hash
-      #   uses: actions/upload-artifact@v4
+      #   uses: actions/upload-artifact@v7
       #   with:
       #     name: ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz
       #     path: ${{ vars.COLLECTOR }}-CRX-${{ needs.Date.outputs.Date }}.tgz*
       #     if-no-files-found: error
 
       # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v4
+      #   uses: actions/upload-artifact@v7
       #   with:
       #     name: browser-extensions
       #     path: extensions/
@@ -235,7 +235,7 @@ jobs:
       #       ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.sha
 
       # - name: Upload Artifact Hash File
-      #   uses: actions/upload-artifact@v4
+      #   uses: actions/upload-artifact@v7
       #   with:
       #     name: ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.sha
       #     path: ${{ vars.COLLECTOR }}/${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.sha
@@ -248,7 +248,7 @@ jobs:
           cp -v ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso.txt ${{ vars.COLLECTOR }}/
 
       - name: Upload ISO ToC artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso.txt
           path: ${{ vars.COLLECTOR }}/${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso.txt
@@ -274,7 +274,7 @@ jobs:
         run: ls -1Ssh *.iso*
 
       - name: Upload ISO, ToC, and hash
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso
           path: ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.iso*
