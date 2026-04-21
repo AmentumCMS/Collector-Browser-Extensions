@@ -10,7 +10,7 @@ on:
 
 jobs:
   Date:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     outputs:
       Date: ${{ steps.date.outputs.date }}
     steps:
@@ -23,7 +23,7 @@ jobs:
 
   Code:
     needs: [Date]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
@@ -79,7 +79,7 @@ jobs:
 
   Collect-Github:
     needs: [Date]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
   
@@ -192,7 +192,7 @@ jobs:
       #     path: extensions/
 
   MakeISO:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [Date, Code, Collect-Github]
     env:
       GH_TOKEN: ${{ github.token }}
@@ -281,7 +281,7 @@ jobs:
           if-no-files-found: error
 
   Release:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [Date, MakeISO]
     permissions:
       contents: write
@@ -304,7 +304,7 @@ jobs:
       # Create Release
 
   Sharepoint:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [Date, MakeISO]
     permissions:
       contents: write
