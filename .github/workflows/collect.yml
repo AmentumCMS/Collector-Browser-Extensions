@@ -39,7 +39,7 @@ jobs:
           git config user.name "$(git log -n 1 --pretty=format:%an)"
           git config user.email "$(git log -n 1 --pretty=format:%ae)"
 
-      - name: Bundle Repo1 code base for ${{ vars.COLLECTOR }}
+      - name: Bundle code base for ${{ vars.COLLECTOR }}
         run: |
           git bundle create --progress ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.bundle --all
           echo -e "\nDirectory Listing\n$(ls -1sht *)"
@@ -381,3 +381,4 @@ jobs:
           make_latest: true
           files: |
             ${{ vars.COLLECTOR }}/*
+      # Upload files to Sharepoint

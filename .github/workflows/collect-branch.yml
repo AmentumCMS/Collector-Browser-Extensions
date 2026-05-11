@@ -39,7 +39,7 @@ jobs:
           git config user.name "$(git log -n 1 --pretty=format:%an)"
           git config user.email "$(git log -n 1 --pretty=format:%ae)"
 
-      - name: Bundle Repo1 code base for ${{ vars.COLLECTOR }}
+      - name: Bundle code base for ${{ vars.COLLECTOR }}
         run: |
           git bundle create --progress ${{ vars.COLLECTOR }}-${{ needs.Date.outputs.Date }}.bundle --all
           echo -e "\nDirectory Listing\n$(ls -1sht *)"
@@ -358,7 +358,7 @@ jobs:
         run: ls -1sh ${{ vars.COLLECTOR }}
 
       # Create Release
-
+      # Upload files to Sharepoint
   Sharepoint:
     runs-on: ubuntu-latest
     needs: [Date, MakeISO]
@@ -374,4 +374,3 @@ jobs:
       - name: Show Artifacts
         run: ls -1Ssh ${{ vars.COLLECTOR }}-*.*
 
-      # Upload files to Sharepoint
