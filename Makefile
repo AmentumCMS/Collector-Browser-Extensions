@@ -34,9 +34,10 @@ GIT_COMMIT := $(shell git rev-parse HEAD 2>/dev/null || echo "unknown")
 GIT_SHORT  := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_DATE := $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
 
-# Submodule directories (from .gitmodules)
-# Note: react (facebook/react) uses yarn — handled separately in deps target
-SUBMODULES := darkreader redux-devtools redux-devtools-extension
+# Submodule directories (from .gitmodules) — npm-based only
+# Note: react (facebook/react) uses yarn — handled separately in react-deps target
+# Note: redux-devtools uses pnpm — deps handled in build.sh
+SUBMODULES := darkreader redux-devtools-extension
 
 # Chrome binary for CRX packing (override with CHROME_BIN env var)
 CHROME_BIN ?= $(shell \

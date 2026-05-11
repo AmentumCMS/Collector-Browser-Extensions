@@ -259,9 +259,46 @@ else
   log "SKIP: react-devtools (react submodule not found at ${REPO_ROOT}/react)"
 fi
 
-# redux-devtools — Redux DevTools (monorepo with pre-built extension)
-# Pre-built extension lives in extension/chrome/
-build_extension "redux-devtools" "${REPO_ROOT}/redux-devtools" ""
+# redux-devtools — Redux DevTools (pnpm monorepo)
+# The extension source lives in redux-devtools/extension/ and builds via pnpm.
+# Build output goes to extension/chrome/dist/ (with manifest.json and all JS bundles).
+REDUX_DEVTOOLS_DIR="${REPO_ROOT}/redux-devtools"
+if [ -d "${REDUX_DEVTOOLS_DIR}" ] && [ -f "${REDUX_DEVTOOLS_DIR}/pnpm-workspace.yaml" ]; then
+  hr
+  log "Building: redux-devtools (${REDUX_DEVTOOLS_DIR})"
+
+  # Install pnpm if not available
+  if ! command -v pnpm >/dev/null 2>&1; then
+    log "Installing pnpm..."
+    npm install -g pnpm
+  fi
+
+  # Install monorepo dependencies
+  log "Installing redux-devtools monorepo dependencies (pnpm)..."
+  (cd "${REDUX_DEVTOOLS_DIR}" && pnpm install --no-frozen-lockfile 2>/dev/null || pnpm install)
+
+  # Build just the extension package
+  log "Building redux-devtools extension..."
+  if (cd "${REDUX_DEVTOOLS_DIR}/extension" && pnpm run build:extension 2>&1); then
+    # Output is at extension/chrome/dist/ with manifest.json inside
+    redux_out="${REDUX_DEVTOOLS_DIR}/extension/chrome/dist"
+    if [ -d "${redux_out}" ] && [ -f "${redux_out}/manifest.json" ]; then
+      log "Copying unpacked extension from ${redux_out}"
+      cp -r "${redux_out}" "${UNPACKED_DIR}/redux-devtools"
+      # Pack CRX if Chrome is available
+      if [ -n "${CHROME_BIN}" ] && [ -d "${UNPACKED_DIR}/redux-devtools" ]; then
+        pack_crx "redux-devtools"
+      fi
+      log "Done: redux-devtools"
+    else
+      log "WARNING: redux-devtools build completed but no extension found at ${redux_out}"
+    fi
+  else
+    log "WARNING: redux-devtools build failed"
+  fi
+else
+  log "SKIP: redux-devtools (submodule not found or not a pnpm workspace)"
+fi
 
 # redux-devtools-extension — standalone Redux DevTools extension
 # Build output goes to build/extension/
