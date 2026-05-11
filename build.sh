@@ -94,7 +94,7 @@ build_extension() {
   if [ -f "${src_dir}/package.json" ]; then
     log "Installing dependencies (npm ci or npm install)..."
     if [ -f "${src_dir}/package-lock.json" ]; then
-      (cd "${src_dir}" && npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts)
+      (cd "${src_dir}" && npm ci --ignore-scripts || { log "npm ci failed, falling back to npm install"; npm install --ignore-scripts; })
     else
       (cd "${src_dir}" && npm install --ignore-scripts)
     fi
@@ -177,7 +177,7 @@ pack_crx() {
   fi
 
   # Chrome outputs the CRX next to the source directory
-  "${CHROME_BIN}" --no-sandbox --headless ${pack_args} 2>/dev/null || {
+  "${CHROME_BIN}" --no-sandbox --headless ${pack_args} || {
     log "WARNING: CRX packing failed for ${name}"
     return 0
   }

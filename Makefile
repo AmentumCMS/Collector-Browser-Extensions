@@ -80,7 +80,7 @@ deps: ## Install dependencies deterministically
 		if [ -f "$$mod/package.json" ]; then \
 			echo "[make] Installing deps for $$mod..."; \
 			if [ -f "$$mod/package-lock.json" ]; then \
-				(cd "$$mod" && npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts); \
+				(cd "$$mod" && npm ci --ignore-scripts || { echo "[make] npm ci failed for $$mod, falling back to npm install"; npm install --ignore-scripts; }); \
 			else \
 				(cd "$$mod" && npm install --ignore-scripts); \
 			fi; \
