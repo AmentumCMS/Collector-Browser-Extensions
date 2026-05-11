@@ -46,6 +46,13 @@ command -v node >/dev/null 2>&1 || die "node is not installed"
 command -v npm  >/dev/null 2>&1 || die "npm is not installed"
 log "Node $(node --version)  npm $(npm --version)"
 
+# Enable corepack so that yarn/pnpm versions are managed via
+# the packageManager field in each submodule's package.json.
+if command -v corepack >/dev/null 2>&1; then
+  corepack enable
+  log "Corepack enabled (manages yarn/pnpm versions automatically)"
+fi
+
 if [ -z "${CHROME_BIN}" ]; then
   log "WARNING: Chrome/Chromium not found — CRX packing will be skipped"
   log "  Set CHROME_BIN env var or install google-chrome-stable"
@@ -267,10 +274,14 @@ if [ -d "${REDUX_DEVTOOLS_DIR}" ] && [ -f "${REDUX_DEVTOOLS_DIR}/pnpm-workspace.
   hr
   log "Building: redux-devtools (${REDUX_DEVTOOLS_DIR})"
 
-  # Install pnpm if not available
+  # Install pnpm if not available (corepack should provide it, fall back to npm)
   if ! command -v pnpm >/dev/null 2>&1; then
     log "Installing pnpm..."
-    npm install -g pnpm
+    if command -v corepack >/dev/null 2>&1; then
+      corepack enable
+    else
+      npm install -g pnpm
+    fi
   fi
 
   # Install monorepo dependencies

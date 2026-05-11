@@ -162,6 +162,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
+      - name: Enable Corepack (manages yarn/pnpm versions via packageManager field)
+        run: corepack enable
+
       - name: Install Google Chrome
         uses: browser-actions/setup-chrome@v2
         with:

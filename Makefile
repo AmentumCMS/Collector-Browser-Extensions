@@ -96,6 +96,8 @@ deps: ## Install dependencies deterministically
 # building React packages before the devtools extension can be built.
 react-deps: ## Install React monorepo deps and build devtools prerequisites
 	@if [ -d "react" ] && [ -f "react/package.json" ]; then \
+		echo "[make] Enabling corepack for yarn version management..."; \
+		corepack enable 2>/dev/null || true; \
 		echo "[make] Installing React monorepo dependencies (yarn)..."; \
 		(cd react && yarn install --frozen-lockfile 2>/dev/null || yarn install); \
 		echo "[make] Building React packages for devtools..."; \
