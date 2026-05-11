@@ -10,6 +10,7 @@ coverage/
 docs/
 .yarn/cache
 *extension*/
+.keys/
 
 # Ignore Files
 *.tgz
