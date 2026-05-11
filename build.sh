@@ -221,10 +221,43 @@ pack_crx() {
 # Output goes to build/release/chrome-mv3/ (or build/release/chrome/ for MV2)
 build_extension "darkreader" "${REPO_ROOT}/darkreader" "npm run build"
 
-# react-devtools — Facebook's React DevTools (archived, no longer buildable)
-# The original repo (facebook/react-devtools) is archived and empty.
-# React DevTools is now part of the facebook/react monorepo.
-log "SKIP: react-devtools (archived repository — not buildable)"
+# react-devtools — Facebook's React Developer Tools
+# Source lives in the facebook/react monorepo at packages/react-devtools-extensions/
+# Requires pre-built React packages (built via `yarn build-for-devtools` in Makefile).
+# Build produces chrome extension at react/packages/react-devtools-extensions/chrome/build/unpacked/
+REACT_DEVTOOLS_DIR="${REPO_ROOT}/react/packages/react-devtools-extensions"
+if [ -d "${REACT_DEVTOOLS_DIR}" ]; then
+  hr
+  log "Building: react-devtools (${REACT_DEVTOOLS_DIR})"
+
+  # Install devtools extension deps
+  if [ -f "${REACT_DEVTOOLS_DIR}/package.json" ]; then
+    log "Installing react-devtools-extensions dependencies..."
+    (cd "${REPO_ROOT}/react" && yarn install --frozen-lockfile 2>/dev/null || yarn install)
+  fi
+
+  # Build the Chrome extension
+  log "Running: yarn build:chrome"
+  if (cd "${REACT_DEVTOOLS_DIR}" && NODE_ENV=production node ./chrome/build 2>&1); then
+    # Output is at chrome/build/unpacked/ with manifest.json inside
+    local_out="${REACT_DEVTOOLS_DIR}/chrome/build/unpacked"
+    if [ -d "${local_out}" ] && [ -f "${local_out}/manifest.json" ]; then
+      log "Copying unpacked extension from ${local_out}"
+      cp -r "${local_out}" "${UNPACKED_DIR}/react-devtools"
+      # Pack CRX if Chrome is available
+      if [ -n "${CHROME_BIN}" ] && [ -d "${UNPACKED_DIR}/react-devtools" ]; then
+        pack_crx "react-devtools"
+      fi
+      log "Done: react-devtools"
+    else
+      log "WARNING: react-devtools build completed but no unpacked extension found at ${local_out}"
+    fi
+  else
+    log "WARNING: react-devtools build failed"
+  fi
+else
+  log "SKIP: react-devtools (react submodule not found at ${REPO_ROOT}/react)"
+fi
 
 # redux-devtools — Redux DevTools (monorepo with pre-built extension)
 # Pre-built extension lives in extension/chrome/

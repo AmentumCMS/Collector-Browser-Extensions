@@ -1,4 +1,4 @@
-facebook/react-devtools
+facebook/react
 zalmoxisus/redux-devtools-extension
 darkreader/darkreader
 reduxjs/redux-devtools

@@ -35,7 +35,7 @@ GIT_SHORT  := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_DATE := $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
 
 # Submodule directories (from .gitmodules)
-# Note: react-devtools is archived and has no package.json — excluded from deps
+# Note: react (facebook/react) uses yarn — handled separately in deps target
 SUBMODULES := darkreader redux-devtools redux-devtools-extension
 
 # Chrome binary for CRX packing (override with CHROME_BIN env var)
@@ -45,14 +45,14 @@ CHROME_BIN ?= $(shell \
 	done)
 
 # ─── Phony targets ──────────────────────────────────────────────
-.PHONY: all submodules deps build checksums clean verify info help
+.PHONY: all submodules deps react-deps build checksums clean verify info help
 
 # ─── Default target ─────────────────────────────────────────────
 # `make all` runs the full build pipeline in order:
 #   1. Sync submodules (fetch extension source code)
 #   2. Install dependencies deterministically
 #   3. Build extensions, produce unpacked + CRX, generate checksums
-all: submodules deps build checksums ## Full pipeline: submodules → deps → build → CRX → checksums
+all: submodules deps react-deps build checksums ## Full pipeline: submodules → deps → build → CRX → checksums
 	@echo ""
 	@echo "══════════════════════════════════════════════════════════"
 	@echo "  Build complete!  Artifacts in: $(DIST_DIR)"
@@ -89,6 +89,20 @@ deps: ## Install dependencies deterministically
 		fi; \
 	done
 	@echo "[make] Dependencies installed."
+
+# ─── React Monorepo Deps ────────────────────────────────────────
+# The react submodule (facebook/react) uses yarn and requires
+# building React packages before the devtools extension can be built.
+react-deps: ## Install React monorepo deps and build devtools prerequisites
+	@if [ -d "react" ] && [ -f "react/package.json" ]; then \
+		echo "[make] Installing React monorepo dependencies (yarn)..."; \
+		(cd react && yarn install --frozen-lockfile 2>/dev/null || yarn install); \
+		echo "[make] Building React packages for devtools..."; \
+		(cd react && yarn build-for-devtools); \
+		echo "[make] React devtools prerequisites built."; \
+	else \
+		echo "[make] SKIP react (submodule not initialised)"; \
+	fi
 
 # ─── Build ───────────────────────────────────────────────────────
 # Build all extensions using the build script.
