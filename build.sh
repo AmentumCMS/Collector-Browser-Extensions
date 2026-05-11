@@ -94,9 +94,9 @@ build_extension() {
   if [ -f "${src_dir}/package.json" ]; then
     log "Installing dependencies (npm ci or npm install)..."
     if [ -f "${src_dir}/package-lock.json" ]; then
-      (cd "${src_dir}" && npm ci --ignore-scripts || { log "npm ci failed, falling back to npm install"; npm install --ignore-scripts; })
+      (cd "${src_dir}" && npm ci || { log "npm ci failed, falling back to npm install"; npm install; })
     else
-      (cd "${src_dir}" && npm install --ignore-scripts)
+      (cd "${src_dir}" && npm install)
     fi
 
     if [ -n "${build_cmd}" ]; then

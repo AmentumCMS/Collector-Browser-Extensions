@@ -71,7 +71,6 @@ submodules: ## Sync git submodules
 # Install Node.js dependencies for each submodule that has a package.json.
 # Uses `npm ci` when package-lock.json exists (deterministic, faster).
 # Falls back to `npm install` otherwise.
-# --ignore-scripts prevents arbitrary code execution during install.
 deps: ## Install dependencies deterministically
 	@echo "[make] Installing dependencies (Node $(NODE_VERSION))..."
 	@echo "[make] Node: $$(node --version 2>/dev/null || echo 'NOT FOUND')"
@@ -80,9 +79,9 @@ deps: ## Install dependencies deterministically
 		if [ -f "$$mod/package.json" ]; then \
 			echo "[make] Installing deps for $$mod..."; \
 			if [ -f "$$mod/package-lock.json" ]; then \
-				(cd "$$mod" && npm ci --ignore-scripts || { echo "[make] npm ci failed for $$mod, falling back to npm install"; npm install --ignore-scripts; }); \
+				(cd "$$mod" && npm ci || { echo "[make] npm ci failed for $$mod, falling back to npm install"; npm install; }); \
 			else \
-				(cd "$$mod" && npm install --ignore-scripts); \
+				(cd "$$mod" && npm install); \
 			fi; \
 		else \
 			echo "[make] SKIP $$mod (no package.json)"; \
