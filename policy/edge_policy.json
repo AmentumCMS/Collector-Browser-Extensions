@@ -1,0 +1,106 @@
+{
+  "_comment": [
+    "Microsoft Edge Enterprise Policy for Air-Gapped Extension Deployment",
+    "",
+    "This policy force-installs extensions from local CRX files without",
+    "requiring internet access. Deploy this file to:",
+    "  Windows: HKLM\\SOFTWARE\\Policies\\Microsoft\\Edge  (via registry or GPO)",
+    "  Linux:   /etc/opt/edge/policies/managed/edge_policy.json",
+    "  macOS:   /Library/Managed Preferences/com.microsoft.Edge.plist",
+    "",
+    "Edge uses the same extension format and IDs as Chrome.",
+    "CRX files must be pre-staged at the paths listed below.",
+    "Update extension IDs and CRX filenames to match your builds."
+  ],
+
+  "_extension_ids": {
+    "_comment": "Reference: extension IDs used in this policy (same as Chrome)",
+    "react_devtools": "fmkadmapgofadopljbjfkapdkoienihi",
+    "redux_devtools": "lmhkpmbekcpmknklioeibfkpmmfibljd",
+    "dark_reader": "eimadpbcbfnmbkopoojfekhnkhdbieeh"
+  },
+
+  "ExtensionInstallForcelist": {
+    "_comment": [
+      "Force-install extensions by ID.",
+      "Format: '<extension_id>;<update_url_or_crx_path>'",
+      "For offline/air-gapped installs, use a file:// URL pointing to an",
+      "update manifest XML.",
+      "",
+      "Windows paths use file:///C:/browser-extensions/chrome/",
+      "Linux paths use file:///opt/browser-extensions/chrome/",
+      "",
+      "Edge supports Chrome extension IDs and CRX format."
+    ],
+    "Value": [
+      "fmkadmapgofadopljbjfkapdkoienihi;file:///opt/browser-extensions/chrome/update.xml",
+      "lmhkpmbekcpmknklioeibfkpmmfibljd;file:///opt/browser-extensions/chrome/update.xml",
+      "eimadpbcbfnmbkopoojfekhnkhdbieeh;file:///opt/browser-extensions/chrome/update.xml"
+    ],
+    "Value_Windows": [
+      "fmkadmapgofadopljbjfkapdkoienihi;file:///C:/browser-extensions/chrome/update.xml",
+      "lmhkpmbekcpmknklioeibfkpmmfibljd;file:///C:/browser-extensions/chrome/update.xml",
+      "eimadpbcbfnmbkopoojfekhnkhdbieeh;file:///C:/browser-extensions/chrome/update.xml"
+    ]
+  },
+
+  "ExtensionInstallAllowlist": {
+    "_comment": [
+      "Allowlist: only these extension IDs may be installed.",
+      "Combined with ExtensionInstallBlocklist '*' this creates a",
+      "deny-all-except-these policy."
+    ],
+    "Value": [
+      "fmkadmapgofadopljbjfkapdkoienihi",
+      "lmhkpmbekcpmknklioeibfkpmmfibljd",
+      "eimadpbcbfnmbkopoojfekhnkhdbieeh"
+    ]
+  },
+
+  "ExtensionInstallBlocklist": {
+    "_comment": [
+      "Blocklist: '*' blocks all extensions not explicitly allowed.",
+      "This ensures only allowlisted extensions can be installed."
+    ],
+    "Value": ["*"]
+  },
+
+  "ExtensionSettings": {
+    "_comment": [
+      "Per-extension settings (same keys as Chrome).",
+      "  'installation_mode': 'force_installed' ensures the extension is",
+      "    installed automatically and cannot be removed by the user.",
+      "  'update_url': points to a local update manifest for offline install.",
+      "  'override_update_url': true forces Edge to use our URL, not the",
+      "    Edge Add-ons store URL.",
+      "  'toolbar_pin': 'force_pinned' pins the extension icon to the toolbar.",
+      "",
+      "The wildcard '*' entry disables updates and blocks all other extensions."
+    ],
+    "*": {
+      "installation_mode": "blocked",
+      "blocked_install_message": "This extension is not approved. Contact IT."
+    },
+    "fmkadmapgofadopljbjfkapdkoienihi": {
+      "_comment": "React Developer Tools",
+      "installation_mode": "force_installed",
+      "update_url": "file:///opt/browser-extensions/chrome/update.xml",
+      "override_update_url": true,
+      "toolbar_pin": "force_pinned"
+    },
+    "lmhkpmbekcpmknklioeibfkpmmfibljd": {
+      "_comment": "Redux DevTools",
+      "installation_mode": "force_installed",
+      "update_url": "file:///opt/browser-extensions/chrome/update.xml",
+      "override_update_url": true,
+      "toolbar_pin": "force_pinned"
+    },
+    "eimadpbcbfnmbkopoojfekhnkhdbieeh": {
+      "_comment": "Dark Reader",
+      "installation_mode": "force_installed",
+      "update_url": "file:///opt/browser-extensions/chrome/update.xml",
+      "override_update_url": true,
+      "toolbar_pin": "force_pinned"
+    }
+  }
+}

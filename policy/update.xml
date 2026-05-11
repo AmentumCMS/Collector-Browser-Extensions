@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  Chrome/Edge Offline Update Manifest
+  
+  This file tells Chrome/Edge where to find CRX files for offline
+  force-installed extensions. Place this file alongside the CRX files at:
+    Linux:   /opt/browser-extensions/chrome/update.xml
+    Windows: C:\browser-extensions\chrome\update.xml
+
+  Update the 'codebase' URLs and 'version' attributes to match your
+  actual CRX filenames and extension versions.
+
+  The browser checks this manifest periodically (or at policy refresh)
+  and installs/updates extensions from the listed CRX paths.
+-->
+<gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
+
+  <!-- React Developer Tools -->
+  <app appid='fmkadmapgofadopljbjfkapdkoienihi'>
+    <updatecheck codebase='file:///opt/browser-extensions/chrome/react-devtools.crx' version='99.0.0' />
+  </app>
+
+  <!-- Redux DevTools -->
+  <app appid='lmhkpmbekcpmknklioeibfkpmmfibljd'>
+    <updatecheck codebase='file:///opt/browser-extensions/chrome/redux-devtools.crx' version='99.0.0' />
+  </app>
+
+  <!-- Dark Reader -->
+  <app appid='eimadpbcbfnmbkopoojfekhnkhdbieeh'>
+    <updatecheck codebase='file:///opt/browser-extensions/chrome/darkreader.crx' version='99.0.0' />
+  </app>
+
+</gupdate>
