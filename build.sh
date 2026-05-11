@@ -277,7 +277,13 @@ if [ -d "${REDUX_DEVTOOLS_DIR}" ] && [ -f "${REDUX_DEVTOOLS_DIR}/pnpm-workspace.
   log "Installing redux-devtools monorepo dependencies (pnpm)..."
   (cd "${REDUX_DEVTOOLS_DIR}" && pnpm install --no-frozen-lockfile 2>/dev/null || pnpm install)
 
-  # Build just the extension package
+  # Build all workspace packages first (the extension depends on @redux-devtools/app,
+  # @redux-devtools/utils, @redux-devtools/ui, etc. which export from ./lib/index.js —
+  # those lib/ directories only exist after the packages are built).
+  log "Building redux-devtools workspace packages..."
+  (cd "${REDUX_DEVTOOLS_DIR}" && pnpm run build:all 2>&1) || log "WARNING: some workspace packages may have failed to build"
+
+  # Build the extension package
   log "Building redux-devtools extension..."
   if (cd "${REDUX_DEVTOOLS_DIR}/extension" && pnpm run build:extension 2>&1); then
     # Output is at extension/chrome/dist/ with manifest.json inside
