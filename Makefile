@@ -35,7 +35,8 @@ GIT_SHORT  := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_DATE := $(shell date -u '+%Y-%m-%dT%H:%M:%SZ')
 
 # Submodule directories (from .gitmodules)
-SUBMODULES := darkreader react-devtools redux-devtools redux-devtools-extension
+# Note: react-devtools is archived and has no package.json — excluded from deps
+SUBMODULES := darkreader redux-devtools redux-devtools-extension
 
 # Chrome binary for CRX packing (override with CHROME_BIN env var)
 CHROME_BIN ?= $(shell \

@@ -101,7 +101,9 @@ build_extension() {
 
     if [ -n "${build_cmd}" ]; then
       log "Running build: ${build_cmd}"
-      (cd "${src_dir}" && eval "${build_cmd}") || log "WARNING: build command failed for ${name}"
+      if ! (cd "${src_dir}" && eval "${build_cmd}"); then
+        log "WARNING: build command '${build_cmd}' failed for ${name}"
+      fi
     else
       # Try common build scripts in order
       for cmd in "npm run build" "npm run build:chrome" "npm run build:extension"; do
@@ -112,7 +114,9 @@ build_extension() {
           process.exit(p.scripts && p.scripts['${script_name}'] ? 0 : 1);
         " 2>/dev/null); then
           log "Running: ${cmd}"
-          (cd "${src_dir}" && eval "${cmd}") || log "WARNING: ${cmd} failed for ${name}"
+          if ! (cd "${src_dir}" && eval "${cmd}"); then
+            log "WARNING: ${cmd} failed for ${name}"
+          fi
           break
         fi
       done
@@ -120,9 +124,17 @@ build_extension() {
   fi
 
   # Copy built extension to unpacked dir
-  # Look for common output directories
+  # Look for common output directories (order matters — prefer more specific paths)
   local out_dir=""
-  for candidate in build dist build/chrome build/extension out; do
+  for candidate in \
+    build/release/chrome-mv3 \
+    build/release/chrome \
+    build/chrome \
+    build/extension \
+    build \
+    dist \
+    extension/chrome \
+    out; do
     if [ -d "${src_dir}/${candidate}" ]; then
       # Verify it looks like an extension (has manifest.json)
       if [ -f "${src_dir}/${candidate}/manifest.json" ]; then
@@ -141,11 +153,7 @@ build_extension() {
     log "Copying unpacked extension from ${out_dir}"
     cp -r "${out_dir}" "${UNPACKED_DIR}/${name}"
   else
-    log "WARNING: No extension output found for ${name}"
-    # Copy the source directory as-is if it exists
-    if [ -d "${src_dir}" ]; then
-      cp -r "${src_dir}" "${UNPACKED_DIR}/${name}"
-    fi
+    log "WARNING: No extension output found for ${name} (no manifest.json in any candidate dir)"
     return 0
   fi
 
@@ -177,10 +185,17 @@ pack_crx() {
   fi
 
   # Chrome outputs the CRX next to the source directory
-  "${CHROME_BIN}" --no-sandbox --headless ${pack_args} || {
-    log "WARNING: CRX packing failed for ${name}"
-    return 0
-  }
+  # Note: --pack-extension is a utility mode; --headless=new for modern Chrome
+  if ! "${CHROME_BIN}" --no-sandbox --headless=new ${pack_args} 2>&1; then
+    # Fall back to legacy --headless flag for older Chrome versions
+    if ! "${CHROME_BIN}" --no-sandbox --headless ${pack_args} 2>&1; then
+      # Try without --headless at all (pack-extension doesn't need a display)
+      if ! "${CHROME_BIN}" --no-sandbox ${pack_args} 2>&1; then
+        log "WARNING: CRX packing failed for ${name}"
+        return 0
+      fi
+    fi
+  fi
 
   # Move CRX and key to dist
   local crx_output="${UNPACKED_DIR}/${name}.crx"
@@ -203,15 +218,20 @@ pack_crx() {
 
 # ─── Build each extension ───────────────────────────────────────
 # darkreader — has its own build system
+# Output goes to build/release/chrome-mv3/ (or build/release/chrome/ for MV2)
 build_extension "darkreader" "${REPO_ROOT}/darkreader" "npm run build"
 
-# react-devtools — Facebook's React DevTools
-build_extension "react-devtools" "${REPO_ROOT}/react-devtools" ""
+# react-devtools — Facebook's React DevTools (archived, no longer buildable)
+# The original repo (facebook/react-devtools) is archived and empty.
+# React DevTools is now part of the facebook/react monorepo.
+log "SKIP: react-devtools (archived repository — not buildable)"
 
-# redux-devtools — Redux DevTools (monorepo)
+# redux-devtools — Redux DevTools (monorepo with pre-built extension)
+# Pre-built extension lives in extension/chrome/
 build_extension "redux-devtools" "${REPO_ROOT}/redux-devtools" ""
 
 # redux-devtools-extension — standalone Redux DevTools extension
+# Build output goes to build/extension/
 build_extension "redux-devtools-extension" "${REPO_ROOT}/redux-devtools-extension" "npm run build:extension"
 
 # ─── Generate checksums ─────────────────────────────────────────
